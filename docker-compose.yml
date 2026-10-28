@@ -1,0 +1,55 @@
+services:
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/data:/prometheus
+    networks:
+      - rcomputing
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    networks:
+      - rcomputing
+
+  node-exporter:
+  image: prom/node-exporter
+  container_name: node-exporter
+  restart: unless-stopped
+  command:
+    - '--path.rootfs=/host'
+  pid: host
+  volumes:
+    - /:/host:ro,rslave
+  networks:
+    - rcomputing
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes: 
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - rcomputing
+
+networks:
+  rcomputing
+    external: true
