@@ -23,15 +23,15 @@ services:
       - rcomputing
 
   node-exporter:
-  image: prom/node-exporter
-  container_name: node-exporter
-  restart: unless-stopped
-  command:
+    image: prom/node-exporter
+    container_name: node-exporter
+    restart: unless-stopped
+    command:
     - '--path.rootfs=/host'
-  pid: host
-  volumes:
+    pid: host
+    volumes:
     - /:/host:ro,rslave
-  networks:
+    networks:
     - rcomputing
 
   cadvisor:
