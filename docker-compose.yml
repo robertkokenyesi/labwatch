@@ -16,7 +16,7 @@ services:
     container_name: grafana
     restart: unless-stopped
     env_file:
-      - .env
+      - ./grafana/.env
     volumes:
       - ./grafana/data:/var/lib/grafana
     networks:
